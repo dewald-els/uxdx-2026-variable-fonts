@@ -17,6 +17,13 @@
     font-weight: 100 800;
 }
 
+@font-face {
+    font-family: 'Sixtyfour';
+    src: url('homecomputer-fonts-v2.3/Sixtyfour/fonts/variable/SixtyfourConvergence[BLED,SCAN,XELA,YELA].ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     font-family: 'JetBrains Mono', monospace;
     background: linear-gradient(160deg, #8776ED 0%, #5CC6CE 100%);
@@ -67,36 +74,37 @@ header h1 {
 .upload-section {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
-.upload-button {
-    background: white;
-    color: #8776ED;
-    padding: 8px 16px;
+.font-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 6px 14px;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: inline-block;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.upload-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.font-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.font-toggle.active {
+    background: white;
+    color: #8776ED;
+    border-color: white;
 }
 
 #font-upload {
     display: none;
 }
 
-.font-name {
-    color: white;
-    font-size: 0.85rem;
-    opacity: 0.9;
-}
 
 main {
     padding: 20px;

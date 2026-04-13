@@ -4,9 +4,11 @@ const axesContainer = document.getElementById('axes-container');
 const fontSettings = document.getElementById('font-settings');
 const animateBtn = document.getElementById('animate-btn');
 const animateColorsCheckbox = document.getElementById('animate-colors');
+const fontToggles = document.querySelectorAll('.font-toggle');
 
 // State
 let currentAxes = {};
+let currentFont = 'google-sans-flex';
 let isAnimating = false;
 let animationInterval = null;
 
@@ -22,20 +24,85 @@ const colorPalette = [
     '#2d2d4a', // Slate
 ];
 
-// Google Sans Flex axes (exact values from Wakamai Fondue)
-const axes = [
-    { tag: 'wght', name: 'Weight', min: 1, max: 1000, default: 400 },
-    { tag: 'wdth', name: 'Width', min: 25, max: 151, default: 100 },
-    { tag: 'GRAD', name: 'Grade', min: 0, max: 100, default: 0 },
-    { tag: 'ROND', name: 'Roundness', min: 0, max: 100, default: 98 },
-    { tag: 'slnt', name: 'Slant', min: -10, max: 0, default: 0 },
-    { tag: 'opsz', name: 'Optical Size', min: 6, max: 144, default: 18 }
-];
+// Font configurations
+const fontConfigs = {
+    'google-sans-flex': {
+        family: 'Google Sans Flex',
+        axes: [
+            { tag: 'wght', name: 'Weight', min: 1, max: 1000, default: 400 },
+            { tag: 'wdth', name: 'Width', min: 25, max: 151, default: 100 },
+            { tag: 'GRAD', name: 'Grade', min: 0, max: 100, default: 0 },
+            { tag: 'ROND', name: 'Roundness', min: 0, max: 100, default: 98 },
+            { tag: 'slnt', name: 'Slant', min: -10, max: 0, default: 0 },
+            { tag: 'opsz', name: 'Optical Size', min: 6, max: 144, default: 18 }
+        ]
+    },
+    'sixtyfour': {
+        family: 'Sixtyfour',
+        axes: [
+            { tag: 'BLED', name: 'Bleed (Custom)', min: -100, max: 100, default: 0 },
+            { tag: 'SCAN', name: 'Scan (Custom)', min: -100, max: 100, default: 0 },
+            { tag: 'XELA', name: 'X Elasticity (Custom)', min: -100, max: 100, default: 0 },
+            { tag: 'YELA', name: 'Y Elasticity (Custom)', min: -100, max: 100, default: 0 }
+        ]
+    }
+};
+
+// Get current axes configuration
+let axes = fontConfigs[currentFont].axes;
 
 // Initialize
 function init() {
+    // Set up font toggle listeners
+    fontToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const font = toggle.dataset.font;
+            switchFont(font);
+        });
+    });
+    
+    // Load initial font
+    loadFont(currentFont);
+}
+
+// Switch to a different font
+function switchFont(font) {
+    if (font === currentFont) return;
+    
+    // Stop any animation
+    if (isAnimating) {
+        toggleAnimation();
+    }
+    
+    currentFont = font;
+    axes = fontConfigs[font].axes;
+    
+    // Update toggle button states
+    fontToggles.forEach(toggle => {
+        if (toggle.dataset.font === font) {
+            toggle.classList.add('active');
+        } else {
+            toggle.classList.remove('active');
+        }
+    });
+    
+    // Load the new font
+    loadFont(font);
+}
+
+// Load a font configuration
+function loadFont(font) {
+    const config = fontConfigs[font];
+    
+    // Update display text font family
+    displayText.style.fontFamily = `"${config.family}", sans-serif`;
+    
+    // Clear existing controls
+    axesContainer.innerHTML = '';
+    currentAxes = {};
+    
     // Create sliders for each axis
-    axes.forEach(axis => {
+    config.axes.forEach(axis => {
         createAxisControl(axis);
     });
     
@@ -141,6 +208,9 @@ function toggleAnimation() {
 }
 
 function startAnimation() {
+    // Get current axes configuration
+    const currentAxesConfig = fontConfigs[currentFont].axes;
+    
     // Store target values for each axis
     const targets = {};
     const startValues = {};
@@ -151,7 +221,7 @@ function startAnimation() {
     const valueDisplays = {};
     
     // Pick random targets for all axes
-    axes.forEach(axis => {
+    currentAxesConfig.forEach(axis => {
         const { tag, min, max } = axis;
         startValues[tag] = currentAxes[tag];
         
@@ -186,7 +256,7 @@ function startAnimation() {
         const elapsed = timestamp - startTime;
         let allComplete = true;
         
-        axes.forEach(axis => {
+        currentAxesConfig.forEach(axis => {
             const { tag, min, max } = axis;
             const duration = durations[tag];
             
