@@ -14,7 +14,7 @@ This demo showcases the power of variable fonts by allowing you to manipulate mu
 - **Width** (wdth): 25-151
 - **Grade** (GRAD): 0-100
 - **Roundness** (ROND): 0-100
-- **Slant** (slnt): -10 to 10
+- **Slant** (slnt): -10 to 0
 - **Optical Size** (opsz): 6-144
 
 ## Features

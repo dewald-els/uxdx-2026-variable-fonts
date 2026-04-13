@@ -3,11 +3,24 @@ const displayText = document.getElementById('display-text');
 const axesContainer = document.getElementById('axes-container');
 const fontSettings = document.getElementById('font-settings');
 const animateBtn = document.getElementById('animate-btn');
+const animateColorsCheckbox = document.getElementById('animate-colors');
 
 // State
 let currentAxes = {};
 let isAnimating = false;
 let animationInterval = null;
+
+// Color palette matching the theme
+const colorPalette = [
+    '#8776ED', // Purple (primary)
+    '#5CC6CE', // Cyan (secondary)
+    '#1a1a2e', // Dark navy
+    '#a68bff', // Light purple
+    '#3dd9e6', // Light cyan
+    '#6b5ce7', // Deep purple
+    '#48c9d4', // Medium cyan
+    '#2d2d4a', // Slate
+];
 
 // Google Sans Flex axes (exact values from Wakamai Fondue)
 const axes = [
@@ -15,7 +28,7 @@ const axes = [
     { tag: 'wdth', name: 'Width', min: 25, max: 151, default: 100 },
     { tag: 'GRAD', name: 'Grade', min: 0, max: 100, default: 0 },
     { tag: 'ROND', name: 'Roundness', min: 0, max: 100, default: 98 },
-    { tag: 'slnt', name: 'Slant', min: -10, max: 10, default: 0 },
+    { tag: 'slnt', name: 'Slant', min: -10, max: 0, default: 0 },
     { tag: 'opsz', name: 'Optical Size', min: 6, max: 144, default: 18 }
 ];
 
@@ -133,6 +146,10 @@ function startAnimation() {
     const startValues = {};
     const durations = {};
     
+    // Cache DOM elements
+    const sliders = {};
+    const valueDisplays = {};
+    
     // Pick random targets for all axes
     axes.forEach(axis => {
         const { tag, min, max } = axis;
@@ -142,20 +159,35 @@ function startAnimation() {
         const animMax = tag === 'wdth' ? 100 : max;
         
         targets[tag] = min + Math.random() * (animMax - min);
-        durations[tag] = 800 + Math.random() * 800; // 0.8-1.6 seconds per transition
+        durations[tag] = 600 + Math.random() * 600; // 0.6-1.2 seconds per transition
+        
+        // Cache DOM lookups
+        sliders[tag] = document.getElementById(`axis-${tag}`);
+        valueDisplays[tag] = document.getElementById(`value-${tag}`);
     });
     
-    const startTime = Date.now();
+    // Color animation setup
+    let startColor = null;
+    let targetColor = null;
+    let colorDuration = 0;
     
-    function animate() {
+    if (animateColorsCheckbox.checked) {
+        const currentColor = window.getComputedStyle(displayText).color;
+        startColor = currentColor;
+        targetColor = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        colorDuration = 600 + Math.random() * 600;
+    }
+    
+    const startTime = performance.now();
+    
+    function animate(timestamp) {
         if (!isAnimating) return;
         
-        const now = Date.now();
+        const elapsed = timestamp - startTime;
         let allComplete = true;
         
         axes.forEach(axis => {
             const { tag, min, max } = axis;
-            const elapsed = now - startTime;
             const duration = durations[tag];
             
             if (elapsed < duration) {
@@ -169,16 +201,16 @@ function startAnimation() {
                 const currentValue = startValues[tag] + (targets[tag] - startValues[tag]) * eased;
                 currentAxes[tag] = currentValue;
                 
-                // Update the slider
-                const slider = document.getElementById(`axis-${tag}`);
-                const valueDisplay = document.getElementById(`value-${tag}`);
+                // Update slider and value display
+                if (sliders[tag]) {
+                    sliders[tag].value = currentValue;
+                }
                 
-                if (slider && valueDisplay) {
-                    slider.value = currentValue;
+                if (valueDisplays[tag]) {
                     const range = Math.abs(max - min);
                     const step = range > 100 ? 1 : (range > 10 ? 0.1 : 0.01);
                     const displayValue = (step >= 1) ? Math.round(currentValue) : currentValue.toFixed(step < 0.1 ? 2 : 1);
-                    valueDisplay.textContent = displayValue;
+                    valueDisplays[tag].textContent = displayValue;
                 }
             } else {
                 // Reached target, set to exact value
@@ -186,8 +218,22 @@ function startAnimation() {
             }
         });
         
-        updateFontVariation();
-        updateFontSettings();
+        // Animate color if enabled
+        if (animateColorsCheckbox.checked && targetColor && elapsed < colorDuration) {
+            allComplete = false;
+            displayText.style.color = targetColor;
+        }
+        
+        // Update font variation once per frame
+        const settings = Object.entries(currentAxes)
+            .map(([tag, value]) => `"${tag}" ${value}`)
+            .join(', ');
+        displayText.style.fontVariationSettings = settings;
+        
+        // Update CSS display less frequently to reduce reflows
+        if (Math.floor(elapsed / 50) % 2 === 0) {
+            updateFontSettings();
+        }
         
         if (allComplete) {
             // All axes reached their targets, pick new ones
@@ -209,6 +255,13 @@ function stopAnimation() {
 
 // Event listeners
 animateBtn.addEventListener('click', toggleAnimation);
+
+// Reset color when checkbox is unchecked
+animateColorsCheckbox.addEventListener('change', (e) => {
+    if (!e.target.checked) {
+        displayText.style.color = '#1a1a2e';
+    }
+});
 
 // Start the app
 init();

@@ -11,9 +11,15 @@
     font-stretch: 50% 150%;
 }
 
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('JetBrainsMono-2.304/fonts/variable/JetBrainsMono[wght].ttf') format('truetype');
+    font-weight: 100 800;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'JetBrains Mono', monospace;
+    background: linear-gradient(160deg, #8776ED 0%, #5CC6CE 100%);
     min-height: 100vh;
     padding: 16px;
     display: flex;
@@ -34,9 +40,23 @@ body {
 }
 
 header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #1a1a2e;
     color: white;
     padding: 15px 20px;
+    border-bottom: 3px solid transparent;
+    border-image: linear-gradient(90deg, #8776ED 0%, #5CC6CE 100%) 1;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
 }
 
 header h1 {
@@ -53,7 +73,7 @@ header h1 {
 
 .upload-button {
     background: white;
-    color: #667eea;
+    color: #8776ED;
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
@@ -83,12 +103,13 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .content-wrapper {
     display: grid;
     grid-template-columns: 1fr 350px;
-    gap: 20px;
+    gap: 15px;
     align-items: stretch;
     flex: 1;
 }
@@ -113,10 +134,44 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.animation-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.color-checkbox-container {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    color: #1a1a2e;
+    font-weight: 500;
+}
+
+.color-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #8776ED;
 }
 
 .animate-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #1a1a2e;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -124,10 +179,12 @@ main {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 20px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    width: 100%;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
     flex-shrink: 0;
+}
+
+.animate-btn.active {
+    background: #e63946;
 }
 
 .controls-section {
@@ -137,7 +194,7 @@ main {
 .controls-section h2 {
     font-size: 1.1rem;
     margin-bottom: 12px;
-    color: #333;
+    color: #1a1a2e;
 }
 
 .axes-container {
@@ -158,7 +215,7 @@ main {
 }
 
 .axes-container::-webkit-scrollbar-thumb {
-    background: #667eea;
+    background: #8776ED;
     border-radius: 3px;
 }
 
@@ -171,7 +228,7 @@ main {
 }
 
 .axis-control:hover {
-    border-color: #667eea;
+    border-color: #8776ED;
 }
 
 .axis-header {
@@ -184,7 +241,7 @@ main {
 .axis-label {
     font-weight: 600;
     font-size: 0.85rem;
-    color: #333;
+    color: #1a1a2e;
 }
 
 .axis-tag {
@@ -198,7 +255,7 @@ main {
 
 .axis-value {
     font-weight: 600;
-    color: #667eea;
+    color: #1a1a2e;
     min-width: 50px;
     text-align: right;
     font-size: 0.85rem;
@@ -229,7 +286,7 @@ input[type="range"]::-webkit-slider-thumb {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #667eea;
+    background: #1a1a2e;
     cursor: pointer;
     transition: transform 0.2s;
 }
@@ -242,7 +299,7 @@ input[type="range"]::-moz-range-thumb {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #667eea;
+    background: #1a1a2e;
     cursor: pointer;
     border: none;
     transition: transform 0.2s;
@@ -262,26 +319,26 @@ input[type="range"]::-moz-range-thumb:hover {
 
 .info-section {
     background: #f8f9fa;
-    padding: 12px 15px;
+    padding: 16px 20px;
     border-radius: 8px;
-    margin-top: 15px;
+    margin-top: 0;
     grid-column: 1 / -1;
 }
 
 .info-section h3 {
-    font-size: 0.95rem;
-    margin-bottom: 8px;
-    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #1a1a2e;
 }
 
 .info-section code {
     display: block;
     background: white;
-    padding: 10px;
+    padding: 16px;
     border-radius: 4px;
     font-family: 'Courier New', monospace;
-    font-size: 0.75rem;
-    color: #667eea;
+    font-size: 0.95rem;
+    color: #1a1a2e;
     overflow-x: auto;
     white-space: pre-wrap;
     word-break: break-all;
@@ -307,7 +364,7 @@ input[type="range"]::-moz-range-thumb:hover {
     font-size: 1.1rem;
     margin-top: 20px;
     margin-bottom: 12px;
-    color: #333;
+    color: #1a1a2e;
 }
 
 .features-container {

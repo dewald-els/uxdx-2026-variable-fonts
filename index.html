@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Variable Fonts Demo</title>
+    <link rel="icon" type="image/svg+xml" href="uxdx-icon.svg">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Variable Fonts Demo</h1>
-            <div class="upload-section">
-                <span class="font-name">Google Sans Flex</span>
+            <div class="header-title">
+                <img src="uxdx-icon.svg" alt="UXDX Logo" class="header-icon">
+                <div>
+                    <h1>Variable Fonts Demo</h1>
+                    <div class="upload-section">
+                        <span class="font-name">Google Sans Flex</span>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -21,7 +27,15 @@
                     <div class="display-text" id="display-text">
                         UXDX Oslo<br>Fonts: Clay to Pixels
                     </div>
-                    <button id="animate-btn" class="animate-btn">✨ Animate</button>
+                    <div class="animation-controls">
+                        <div class="color-checkbox-container">
+                            <label class="color-checkbox">
+                                <input type="checkbox" id="animate-colors">
+                                <span>Animate Colors</span>
+                            </label>
+                        </div>
+                        <button id="animate-btn" class="animate-btn">✨ Animate</button>
+                    </div>
                 </div>
 
                 <div class="controls-section">
