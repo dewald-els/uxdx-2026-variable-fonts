@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variable Fonts Demo</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Variable Fonts Demo</h1>
+            <div class="upload-section">
+                <span class="font-name">Google Sans Flex</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="content-wrapper">
+                <div>
+                    <div class="display-text" id="display-text">
+                        UXDX Oslo<br>Fonts: Clay to Pixels
+                    </div>
+                    <button id="animate-btn" class="animate-btn">✨ Animate</button>
+                </div>
+
+                <div class="controls-section">
+                    <h2>Font Variation Axes</h2>
+                    <div id="axes-container" class="axes-container"></div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>Current Settings</h3>
+                <code id="font-settings"></code>
+            </div>
+        </main>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
